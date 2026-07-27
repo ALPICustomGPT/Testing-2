@@ -1,73 +1,1031 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-visualize-standalone>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Offshore Carnivorous Finfish Knowledge Graph</title>
-<style>
-:root{--viz-panel:#ffffff;--viz-card:#ffffff;--viz-chip-card:#f8fafc;--viz-text:#0f172a;--viz-muted:#64748b;--viz-border:#cbd5e1;--viz-accent:#2563eb;--viz-accent-text:#ffffff;--viz-accent-bg:#dbeafe;--viz-accent-bg-subtle:#eff6ff;--viz-series-1:#2563eb;--viz-series-2:#15803d;--viz-series-3:#0f766e;--viz-series-4:#b91c1c;--viz-series-5:#7e22ce;--viz-series-6:#b45309}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#fff;color:var(--viz-text)}body{padding:18px}
-.app{width:100%;max-width:1600px;margin:0 auto}.space-y-4>*+*{margin-top:1rem}.grid{display:grid}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.metric-card{background:var(--viz-chip-card);border:1px solid var(--viz-border);border-radius:14px;padding:14px}.metric-label{font-size:14px;color:var(--viz-muted)}.viz-stat-value{font-size:28px;font-weight:700;margin-top:4px}
-.card{background:var(--viz-card);border:1px solid var(--viz-border);border-radius:14px;padding:14px}.controls{grid-template-columns:repeat(3,minmax(0,1fr))}label{font-size:14px}input,select,button{font:inherit}input,select{width:100%;margin-top:6px;border:1px solid var(--viz-border);border-radius:12px;padding:10px 12px;background:#fff;color:var(--viz-text)}button{border:1px solid var(--viz-border);border-radius:12px;padding:9px 12px;background:#fff;cursor:pointer}button:hover{background:var(--viz-accent-bg-subtle)}.actions{grid-column:1/-1;display:flex;gap:8px;align-items:center}.status{font-size:14px;color:var(--viz-muted)}.fullscreen{margin-left:auto}
-.main-grid{grid-template-columns:minmax(0,1fr) 300px}.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}.viz-badge{display:inline-block;padding:5px 9px;border-radius:999px;color:var(--viz-accent-text);font-size:13px}.graph-wrap{overflow:hidden;border:1px solid var(--viz-border);border-radius:14px;background:var(--viz-panel)}svg{display:block;width:100%;height:auto}.help{margin:8px 0 0;color:var(--viz-muted);font-size:14px}aside{display:flex;flex-direction:column;gap:12px}h2,h3{margin:0;font-weight:500}h2{font-size:18px}h3{font-size:16px}p{line-height:1.45}.source{margin-top:8px;border:1px solid var(--viz-border);border-radius:12px;padding:8px}.source strong{display:block}.source small{color:var(--viz-muted)}.viz-node{border:1px solid var(--viz-border);border-radius:12px;padding:10px;background:#fff}.viz-edge-label{display:inline-block;padding:5px 9px;border-radius:999px;background:var(--viz-accent-bg);color:#1e3a8a;font-size:13px}.edge-btn{display:block;width:100%;text-align:left;border:1px solid var(--viz-border);border-radius:12px;padding:8px 10px;background:var(--viz-card);margin-top:8px}.edge-btn strong{display:block}.edge-btn span{font-size:13px;color:var(--viz-muted)}
-.N{cursor:pointer}.N circle{stroke:var(--viz-panel);stroke-width:2}.N text{font-size:12px;fill:var(--viz-text);pointer-events:none}.E{stroke:#64748b;stroke-width:1.6;opacity:.68;cursor:pointer}.E.on{stroke:var(--viz-accent);stroke-width:3.4;opacity:1}.off{opacity:.08}.N.on circle{stroke:var(--viz-accent);stroke-width:5}
-:fullscreen body{padding:12px}:fullscreen .app{max-width:none}
-@media(max-width:1000px){.main-grid{grid-template-columns:1fr}.metric-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){body{padding:10px}.controls{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr 1fr}.actions{flex-wrap:wrap}.fullscreen{margin-left:0}}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Offshore Carnivorous Finfish Dependency Map</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --red: light-dark(rgb(186 38 35), rgb(250 66 62));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The bundled tooltip runtime owns [data-tooltip]. AppBlock's CSS-only
+   pseudo-tooltip can widen dense grids even while hidden. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--interactive-label-primary-default, var(--primary-foreground));
+  background: var(--interactive-bg-primary-default, var(--foreground));
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(
+    in srgb,
+    var(--interactive-label-primary-default, var(--primary-foreground)) 50%,
+    transparent
+  );
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
 </style>
 </head>
 <body>
+<div id="offshore-carnivorous-finfish-dependency-map">
+<style>
+#offshore-carnivorous-finfish-dependency-map{width:100%;color:var(--foreground)}
+#offshore-carnivorous-finfish-dependency-map *{box-sizing:border-box}
+#offshore-carnivorous-finfish-dependency-map .app{width:100%}
+#offshore-carnivorous-finfish-dependency-map .space-y-4>*+*{margin-top:1rem}
+#offshore-carnivorous-finfish-dependency-map .controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+#offshore-carnivorous-finfish-dependency-map .actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+#offshore-carnivorous-finfish-dependency-map .status{color:var(--muted-foreground)}
+#offshore-carnivorous-finfish-dependency-map .main-grid{display:grid;grid-template-columns:minmax(0,1fr) 17rem;gap:1rem}
+#offshore-carnivorous-finfish-dependency-map .legend{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:.5rem}
+#offshore-carnivorous-finfish-dependency-map .legend-item{display:inline-flex;align-items:center;gap:.35rem;color:var(--foreground)}
+#offshore-carnivorous-finfish-dependency-map .legend-swatch{display:inline-block;width:.7rem;height:.7rem;border-radius:999px}
+#offshore-carnivorous-finfish-dependency-map .graph-wrap{overflow:hidden;touch-action:none}
+#offshore-carnivorous-finfish-dependency-map svg{display:block;width:100%;height:auto}
+#offshore-carnivorous-finfish-dependency-map .help{margin:.5rem 0 0;color:var(--muted-foreground)}
+#offshore-carnivorous-finfish-dependency-map aside{min-width:0}
+#offshore-carnivorous-finfish-dependency-map h2,
+#offshore-carnivorous-finfish-dependency-map h3{margin:0}
+#offshore-carnivorous-finfish-dependency-map .source{margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border)}
+#offshore-carnivorous-finfish-dependency-map .source strong{display:block}
+#offshore-carnivorous-finfish-dependency-map .source small{color:var(--muted-foreground);display:block;margin-top:.2rem}
+#offshore-carnivorous-finfish-dependency-map .dependency-detail{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+#offshore-carnivorous-finfish-dependency-map .dependency-detail>strong{display:block;margin-bottom:.5rem}
+#offshore-carnivorous-finfish-dependency-map .viz-node{padding:.5rem 0;font-weight:500}
+#offshore-carnivorous-finfish-dependency-map .edge-btn{display:block;width:100%;text-align:left;margin-top:.5rem}
+#offshore-carnivorous-finfish-dependency-map .edge-btn strong{display:block}
+#offshore-carnivorous-finfish-dependency-map .edge-btn span{display:block;color:var(--muted-foreground)}
+#offshore-carnivorous-finfish-dependency-map .N{cursor:pointer}
+#offshore-carnivorous-finfish-dependency-map .N circle{stroke:var(--background);stroke-width:2}
+#offshore-carnivorous-finfish-dependency-map .N text{font-size:12px;fill:var(--popover-foreground);pointer-events:none}
+#offshore-carnivorous-finfish-dependency-map .category-label{font-size:12px;font-weight:500;fill:var(--foreground)}
+#offshore-carnivorous-finfish-dependency-map .category-label{paint-order:stroke;stroke:var(--background);stroke-width:3px;stroke-linejoin:round}
+#offshore-carnivorous-finfish-dependency-map .node-label-bg{fill:var(--popover);stroke:var(--border);stroke-width:.75;opacity:.99}
+#offshore-carnivorous-finfish-dependency-map .E{stroke:var(--muted-foreground);stroke-width:1.4;opacity:.62;cursor:pointer}
+#offshore-carnivorous-finfish-dependency-map .E.on{stroke:var(--viz-series-1);stroke-width:3;opacity:1}
+#offshore-carnivorous-finfish-dependency-map .off{opacity:.08}
+#offshore-carnivorous-finfish-dependency-map .N.on circle{stroke:var(--ring);stroke-width:5}
+#offshore-carnivorous-finfish-dependency-map .source a{color:var(--foreground);text-decoration:underline;text-underline-offset:.15em}
+@media(max-width:900px){
+  #offshore-carnivorous-finfish-dependency-map .main-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  #offshore-carnivorous-finfish-dependency-map .controls{grid-template-columns:1fr}
+}
+</style>
 <main class="app space-y-4" id="kg">
-<section class="grid metric-grid gap-2">
-<div class="metric-card"><div class="metric-label">Concepts</div><div class="viz-stat-value">58</div></div>
-<div class="metric-card"><div class="metric-label">Dependencies</div><div class="viz-stat-value">100</div></div>
-<div class="metric-card"><div class="metric-label">Graph sources</div><div class="viz-stat-value">52</div></div>
-<div class="metric-card"><div class="metric-label">Registry items</div><div class="viz-stat-value">103</div></div>
-</section>
-<section class="card grid controls gap-3">
-<label>Search<input id="q" placeholder="disease, feed, permits"></label>
-<label>Category<select id="c"><option value="">All categories</option></select></label>
-<label>Type<select id="t"><option value="">All types</option></select></label>
+<section class="viz-controls controls">
+<label class="form-label">Search<input class="form-control" id="q" placeholder="disease, feed, permits"></label>
+<label class="form-label">Category<select class="form-select" id="c"><option value="">All categories</option></select></label>
+<label class="form-label">Type<select class="form-select" id="t"><option value="">All types</option></select></label>
 <div class="actions">
-<button id="r" type="button">Reset</button>
-<button id="zin" type="button" aria-label="Zoom in">Zoom in</button>
-<button id="zout" type="button" aria-label="Zoom out">Zoom out</button>
-<button id="zfit" type="button">Fit map</button>
-<span id="zoomreadout" class="status">100%</span>
-<span id="st" class="status" aria-live="polite">58 concepts and 100 dependencies visible</span>
-<button id="fs" class="fullscreen" type="button">Full screen</button>
+<button class="btn" id="r" type="button">Reset</button>
+<button class="btn" id="zin" type="button">Zoom in</button>
+<button class="btn" id="zout" type="button">Zoom out</button>
+<button class="btn" id="zfit" type="button">Fit map</button>
+<span id="zoomreadout" class="status text-small">100%</span>
+<span id="st" class="status text-small" aria-live="polite">58 concepts and 101 dependencies visible</span>
 </div>
 </section>
-<section class="grid main-grid gap-4">
+<section class="main-grid">
 <div>
 <div id="leg" class="legend"></div>
 <div class="graph-wrap">
-<svg id="g" viewBox="0 0 1200 760" role="img" aria-label="Interactive knowledge graph">
-<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64748b"/></marker></defs>
-<line id="e1" class="E" data-edge="e1" x1="90.00" y1="380.00" x2="260.00" y2="106.47" marker-end="url(#arrow)"/><line id="e2" class="E" data-edge="e2" x1="260.00" y1="142.94" x2="260.00" y2="106.47" marker-end="url(#arrow)"/><line id="e3" class="E" data-edge="e3" x1="260.00" y1="215.88" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e4" class="E" data-edge="e4" x1="260.00" y1="179.41" x2="260.00" y2="142.94" marker-end="url(#arrow)"/><line id="e5" class="E" data-edge="e5" x1="260.00" y1="179.41" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e6" class="E" data-edge="e6" x1="260.00" y1="179.41" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e7" class="E" data-edge="e7" x1="260.00" y1="252.35" x2="260.00" y2="142.94" marker-end="url(#arrow)"/><line id="e8" class="E" data-edge="e8" x1="260.00" y1="252.35" x2="430.00" y2="104.44" marker-end="url(#arrow)"/><line id="e9" class="E" data-edge="e9" x1="260.00" y1="106.47" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e10" class="E" data-edge="e10" x1="260.00" y1="106.47" x2="430.00" y2="517.78" marker-end="url(#arrow)"/><line id="e11" class="E" data-edge="e11" x1="430.00" y1="483.33" x2="430.00" y2="517.78" marker-end="url(#arrow)"/><line id="e12" class="E" data-edge="e12" x1="90.00" y1="380.00" x2="430.00" y2="483.33" marker-end="url(#arrow)"/><line id="e13" class="E" data-edge="e13" x1="430.00" y1="104.44" x2="430.00" y2="138.89" marker-end="url(#arrow)"/><line id="e14" class="E" data-edge="e14" x1="430.00" y1="104.44" x2="430.00" y2="173.33" marker-end="url(#arrow)"/><line id="e15" class="E" data-edge="e15" x1="430.00" y1="173.33" x2="430.00" y2="207.78" marker-end="url(#arrow)"/><line id="e16" class="E" data-edge="e16" x1="430.00" y1="207.78" x2="430.00" y2="242.22" marker-end="url(#arrow)"/><line id="e17" class="E" data-edge="e17" x1="940.00" y1="276.67" x2="430.00" y2="552.22" marker-end="url(#arrow)"/><line id="e18" class="E" data-edge="e18" x1="430.00" y1="552.22" x2="430.00" y2="173.33" marker-end="url(#arrow)"/><line id="e19" class="E" data-edge="e19" x1="940.00" y1="276.67" x2="430.00" y2="104.44" marker-end="url(#arrow)"/><line id="e20" class="E" data-edge="e20" x1="260.00" y1="398.24" x2="260.00" y2="325.29" marker-end="url(#arrow)"/><line id="e21" class="E" data-edge="e21" x1="260.00" y1="361.76" x2="260.00" y2="325.29" marker-end="url(#arrow)"/><line id="e22" class="E" data-edge="e22" x1="260.00" y1="325.29" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e23" class="E" data-edge="e23" x1="260.00" y1="325.29" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e24" class="E" data-edge="e24" x1="260.00" y1="325.29" x2="770.00" y2="612.50" marker-end="url(#arrow)"/><line id="e25" class="E" data-edge="e25" x1="770.00" y1="535.00" x2="260.00" y2="361.76" marker-end="url(#arrow)"/><line id="e26" class="E" data-edge="e26" x1="430.00" y1="448.89" x2="430.00" y2="414.44" marker-end="url(#arrow)"/><line id="e27" class="E" data-edge="e27" x1="430.00" y1="414.44" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e28" class="E" data-edge="e28" x1="430.00" y1="448.89" x2="260.00" y2="434.71" marker-end="url(#arrow)"/><line id="e29" class="E" data-edge="e29" x1="260.00" y1="434.71" x2="430.00" y2="276.67" marker-end="url(#arrow)"/><line id="e30" class="E" data-edge="e30" x1="770.00" y1="612.50" x2="260.00" y2="434.71" marker-end="url(#arrow)"/><line id="e31" class="E" data-edge="e31" x1="430.00" y1="276.67" x2="430.00" y2="311.11" marker-end="url(#arrow)"/><line id="e32" class="E" data-edge="e32" x1="260.00" y1="471.18" x2="430.00" y2="311.11" marker-end="url(#arrow)"/><line id="e33" class="E" data-edge="e33" x1="430.00" y1="276.67" x2="430.00" y2="345.56" marker-end="url(#arrow)"/><line id="e34" class="E" data-edge="e34" x1="430.00" y1="276.67" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e35" class="E" data-edge="e35" x1="90.00" y1="380.00" x2="430.00" y2="380.00" marker-end="url(#arrow)"/><line id="e36" class="E" data-edge="e36" x1="430.00" y1="380.00" x2="600.00" y2="194.00" marker-end="url(#arrow)"/><line id="e37" class="E" data-edge="e37" x1="940.00" y1="276.67" x2="430.00" y2="380.00" marker-end="url(#arrow)"/><line id="e38" class="E" data-edge="e38" x1="940.00" y1="276.67" x2="1110.00" y2="335.71" marker-end="url(#arrow)"/><line id="e39" class="E" data-edge="e39" x1="940.00" y1="483.33" x2="940.00" y2="276.67" marker-end="url(#arrow)"/><line id="e40" class="E" data-edge="e40" x1="1110.00" y1="158.57" x2="940.00" y2="483.33" marker-end="url(#arrow)"/><line id="e41" class="E" data-edge="e41" x1="1110.00" y1="247.14" x2="1110.00" y2="424.29" marker-end="url(#arrow)"/><line id="e42" class="E" data-edge="e42" x1="1110.00" y1="158.57" x2="1110.00" y2="424.29" marker-end="url(#arrow)"/><line id="e43" class="E" data-edge="e43" x1="1110.00" y1="335.71" x2="1110.00" y2="424.29" marker-end="url(#arrow)"/><line id="e44" class="E" data-edge="e44" x1="940.00" y1="483.33" x2="1110.00" y2="335.71" marker-end="url(#arrow)"/><line id="e45" class="E" data-edge="e45" x1="770.00" y1="225.00" x2="940.00" y2="483.33" marker-end="url(#arrow)"/><line id="e46" class="E" data-edge="e46" x1="770.00" y1="147.50" x2="90.00" y2="380.00" marker-end="url(#arrow)"/><line id="e47" class="E" data-edge="e47" x1="770.00" y1="457.50" x2="770.00" y2="147.50" marker-end="url(#arrow)"/><line id="e48" class="E" data-edge="e48" x1="770.00" y1="302.50" x2="770.00" y2="147.50" marker-end="url(#arrow)"/><line id="e49" class="E" data-edge="e49" x1="770.00" y1="380.00" x2="770.00" y2="147.50" marker-end="url(#arrow)"/><line id="e50" class="E" data-edge="e50" x1="770.00" y1="612.50" x2="770.00" y2="147.50" marker-end="url(#arrow)"/><line id="e51" class="E" data-edge="e51" x1="600.00" y1="628.00" x2="770.00" y2="612.50" marker-end="url(#arrow)"/><line id="e52" class="E" data-edge="e52" x1="600.00" y1="628.00" x2="260.00" y2="179.41" marker-end="url(#arrow)"/><line id="e53" class="E" data-edge="e53" x1="600.00" y1="628.00" x2="260.00" y2="434.71" marker-end="url(#arrow)"/><line id="e54" class="E" data-edge="e54" x1="600.00" y1="628.00" x2="940.00" y2="483.33" marker-end="url(#arrow)"/><line id="e55" class="E" data-edge="e55" x1="600.00" y1="318.00" x2="90.00" y2="380.00" marker-end="url(#arrow)"/><line id="e56" class="E" data-edge="e56" x1="600.00" y1="318.00" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e57" class="E" data-edge="e57" x1="600.00" y1="132.00" x2="600.00" y2="442.00" marker-end="url(#arrow)"/><line id="e58" class="E" data-edge="e58" x1="600.00" y1="194.00" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e59" class="E" data-edge="e59" x1="600.00" y1="256.00" x2="600.00" y2="442.00" marker-end="url(#arrow)"/><line id="e60" class="E" data-edge="e60" x1="600.00" y1="256.00" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e61" class="E" data-edge="e61" x1="770.00" y1="147.50" x2="600.00" y2="442.00" marker-end="url(#arrow)"/><line id="e62" class="E" data-edge="e62" x1="600.00" y1="442.00" x2="600.00" y2="504.00" marker-end="url(#arrow)"/><line id="e63" class="E" data-edge="e63" x1="600.00" y1="504.00" x2="430.00" y2="173.33" marker-end="url(#arrow)"/><line id="e64" class="E" data-edge="e64" x1="600.00" y1="504.00" x2="1110.00" y2="335.71" marker-end="url(#arrow)"/><line id="e65" class="E" data-edge="e65" x1="600.00" y1="504.00" x2="600.00" y2="566.00" marker-end="url(#arrow)"/><line id="e66" class="E" data-edge="e66" x1="600.00" y1="566.00" x2="1110.00" y2="424.29" marker-end="url(#arrow)"/><line id="e67" class="E" data-edge="e67" x1="600.00" y1="380.00" x2="600.00" y2="442.00" marker-end="url(#arrow)"/><line id="e68" class="E" data-edge="e68" x1="770.00" y1="302.50" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e69" class="E" data-edge="e69" x1="770.00" y1="380.00" x2="940.00" y2="276.67" marker-end="url(#arrow)"/><line id="e70" class="E" data-edge="e70" x1="770.00" y1="225.00" x2="1110.00" y2="158.57" marker-end="url(#arrow)"/><line id="e71" class="E" data-edge="e71" x1="600.00" y1="628.00" x2="90.00" y2="380.00" marker-end="url(#arrow)"/><line id="e72" class="E" data-edge="e72" x1="260.00" y1="142.94" x2="430.00" y2="517.78" marker-end="url(#arrow)"/><line id="e73" class="E" data-edge="e73" x1="260.00" y1="142.94" x2="600.00" y2="380.00" marker-end="url(#arrow)"/><line id="e74" class="E" data-edge="e74" x1="260.00" y1="325.29" x2="260.00" y2="507.65" marker-end="url(#arrow)"/><line id="e75" class="E" data-edge="e75" x1="260.00" y1="507.65" x2="430.00" y2="586.67" marker-end="url(#arrow)"/><line id="e76" class="E" data-edge="e76" x1="770.00" y1="535.00" x2="260.00" y2="507.65" marker-end="url(#arrow)"/><line id="e77" class="E" data-edge="e77" x1="260.00" y1="507.65" x2="430.00" y2="242.22" marker-end="url(#arrow)"/><line id="e78" class="E" data-edge="e78" x1="260.00" y1="544.12" x2="260.00" y2="325.29" marker-end="url(#arrow)"/><line id="e79" class="E" data-edge="e79" x1="600.00" y1="628.00" x2="260.00" y2="544.12" marker-end="url(#arrow)"/><line id="e80" class="E" data-edge="e80" x1="430.00" y1="621.11" x2="260.00" y2="325.29" marker-end="url(#arrow)"/><line id="e81" class="E" data-edge="e81" x1="430.00" y1="621.11" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e82" class="E" data-edge="e82" x1="940.00" y1="276.67" x2="430.00" y2="621.11" marker-end="url(#arrow)"/><line id="e83" class="E" data-edge="e83" x1="260.00" y1="580.59" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e84" class="E" data-edge="e84" x1="600.00" y1="628.00" x2="260.00" y2="580.59" marker-end="url(#arrow)"/><line id="e85" class="E" data-edge="e85" x1="90.00" y1="380.00" x2="1110.00" y2="512.86" marker-end="url(#arrow)"/><line id="e86" class="E" data-edge="e86" x1="600.00" y1="318.00" x2="1110.00" y2="512.86" marker-end="url(#arrow)"/><line id="e87" class="E" data-edge="e87" x1="260.00" y1="142.94" x2="1110.00" y2="512.86" marker-end="url(#arrow)"/><line id="e88" class="E" data-edge="e88" x1="940.00" y1="483.33" x2="1110.00" y2="601.43" marker-end="url(#arrow)"/><line id="e89" class="E" data-edge="e89" x1="1110.00" y1="335.71" x2="1110.00" y2="601.43" marker-end="url(#arrow)"/><line id="e90" class="E" data-edge="e90" x1="1110.00" y1="158.57" x2="1110.00" y2="601.43" marker-end="url(#arrow)"/><line id="e91" class="E" data-edge="e91" x1="430.00" y1="655.56" x2="430.00" y2="138.89" marker-end="url(#arrow)"/><line id="e92" class="E" data-edge="e92" x1="430.00" y1="655.56" x2="260.00" y2="617.06" marker-end="url(#arrow)"/><line id="e93" class="E" data-edge="e93" x1="600.00" y1="628.00" x2="430.00" y2="655.56" marker-end="url(#arrow)"/><line id="e94" class="E" data-edge="e94" x1="260.00" y1="325.29" x2="600.00" y2="256.00" marker-end="url(#arrow)"/><line id="e95" class="E" data-edge="e95" x1="260.00" y1="325.29" x2="600.00" y2="194.00" marker-end="url(#arrow)"/><line id="e96" class="E" data-edge="e96" x1="260.00" y1="507.65" x2="1110.00" y2="335.71" marker-end="url(#arrow)"/><line id="e97" class="E" data-edge="e97" x1="260.00" y1="398.24" x2="260.00" y2="507.65" marker-end="url(#arrow)"/><line id="e98" class="E" data-edge="e98" x1="260.00" y1="653.53" x2="260.00" y2="288.82" marker-end="url(#arrow)"/><line id="e99" class="E" data-edge="e99" x1="260.00" y1="653.53" x2="260.00" y2="507.65" marker-end="url(#arrow)"/><line id="e100" class="E" data-edge="e100" x1="600.00" y1="628.00" x2="600.00" y2="504.00" marker-end="url(#arrow)"/>
-<g id="n35" class="N" data-node="n35"><circle cx="90.00" cy="380.00" r="23" fill="var(--viz-accent)"/><text x="119.00" y="366.00">Offshore</text><text x="119.00" y="380.00">carnivorous</text><text x="119.00" y="394.00">finfish</text></g><g id="n23" class="N" data-node="n23"><circle cx="260.00" cy="106.47" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="106.47">Formulated feed</text></g><g id="n22" class="N" data-node="n22"><circle cx="260.00" cy="142.94" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="135.94">Fishmeal &amp; fish</text><text x="289.00" y="149.94">oil</text></g><g id="n1" class="N" data-node="n1"><circle cx="260.00" cy="179.41" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="172.41">Alternative feed</text><text x="289.00" y="186.41">ingredients</text></g><g id="n16" class="N" data-node="n16"><circle cx="260.00" cy="215.88" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="201.88">Essential</text><text x="289.00" y="215.88">nutrients /</text><text x="289.00" y="229.88">LC-PUFA</text></g><g id="n19" class="N" data-node="n19"><circle cx="260.00" cy="252.35" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="245.35">Feed conversion</text><text x="289.00" y="259.35">ratio</text></g><g id="n21" class="N" data-node="n21"><circle cx="260.00" cy="288.82" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="281.82">Fish health &amp;</text><text x="289.00" y="295.82">growth</text></g><g id="n12" class="N" data-node="n12"><circle cx="260.00" cy="325.29" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="318.29">Disease &amp; parasite</text><text x="289.00" y="332.29">pressure</text></g><g id="n48" class="N" data-node="n48"><circle cx="260.00" cy="361.76" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="354.76">Vaccination /</text><text x="289.00" y="368.76">veterinary care</text></g><g id="n45" class="N" data-node="n45"><circle cx="260.00" cy="398.24" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="391.24">Stocking density &amp;</text><text x="289.00" y="405.24">stress control</text></g><g id="n10" class="N" data-node="n10"><circle cx="260.00" cy="434.71" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="427.71">Containment</text><text x="289.00" y="441.71">integrity</text></g><g id="n44" class="N" data-node="n44"><circle cx="260.00" cy="471.18" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="464.18">Sterile / triploid</text><text x="289.00" y="478.18">stock</text></g><g id="n47" class="N" data-node="n47"><circle cx="430.00" cy="104.44" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="97.44">Uneaten feed &amp;</text><text x="459.00" y="111.44">fish waste</text></g><g id="n33" class="N" data-node="n33"><circle cx="430.00" cy="138.89" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="138.89">N &amp; P discharge</text></g><g id="n3" class="N" data-node="n3"><circle cx="430.00" cy="173.33" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="166.33">Benthic organic</text><text x="459.00" y="180.33">enrichment</text></g><g id="n38" class="N" data-node="n38"><circle cx="430.00" cy="207.78" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="200.78">Oxygen demand /</text><text x="459.00" y="214.78">sulfides</text></g><g id="n2" class="N" data-node="n2"><circle cx="430.00" cy="242.22" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="235.22">Benthic</text><text x="459.00" y="249.22">biodiversity</text></g><g id="n20" class="N" data-node="n20"><circle cx="430.00" cy="276.67" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="276.67">Fish escapes</text></g><g id="n24" class="N" data-node="n24"><circle cx="430.00" cy="311.11" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="297.11">Genetic</text><text x="459.00" y="311.11">interaction with</text><text x="459.00" y="325.11">wild stocks</text></g><g id="n8" class="N" data-node="n8"><circle cx="430.00" cy="345.56" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="338.56">Competition with</text><text x="459.00" y="352.56">wild fish</text></g><g id="n31" class="N" data-node="n31"><circle cx="430.00" cy="380.00" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="373.00">Marine wildlife</text><text x="459.00" y="387.00">interactions</text></g><g id="n25" class="N" data-node="n25"><circle cx="430.00" cy="414.44" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="407.44">Harmful algal</text><text x="459.00" y="421.44">blooms</text></g><g id="n6" class="N" data-node="n6"><circle cx="430.00" cy="448.89" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="441.89">Climate / extreme</text><text x="459.00" y="455.89">weather</text></g><g id="n14" class="N" data-node="n14"><circle cx="430.00" cy="483.33" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="476.33">Energy &amp; vessel</text><text x="459.00" y="490.33">use</text></g><g id="n4" class="N" data-node="n4"><circle cx="430.00" cy="517.78" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="517.78">Carbon footprint</text></g><g id="n15" class="N" data-node="n15"><circle cx="430.00" cy="552.22" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="545.22">Environmental</text><text x="459.00" y="559.22">carrying capacity</text></g><g id="n36" class="N" data-node="n36"><circle cx="600.00" cy="132.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="118.00">Offshore</text><text x="629.00" y="132.00">infrastructure</text><text x="629.00" y="146.00">cost</text></g><g id="n37" class="N" data-node="n37"><circle cx="600.00" cy="194.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="187.00">Operating &amp;</text><text x="629.00" y="201.00">maintenance cost</text></g><g id="n28" class="N" data-node="n28"><circle cx="600.00" cy="256.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="249.00">Insurance &amp;</text><text x="629.00" y="263.00">production risk</text></g><g id="n26" class="N" data-node="n26"><circle cx="600.00" cy="318.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="311.00">High-value seafood</text><text x="629.00" y="325.00">markets</text></g><g id="n18" class="N" data-node="n18"><circle cx="600.00" cy="380.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="380.00">Farm profitability</text></g><g id="n29" class="N" data-node="n29"><circle cx="600.00" cy="442.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="428.00">Investor</text><text x="629.00" y="442.00">confidence /</text><text x="629.00" y="456.00">finance</text></g><g id="n27" class="N" data-node="n27"><circle cx="600.00" cy="504.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="497.00">Industry scale &amp;</text><text x="629.00" y="511.00">clustering</text></g><g id="n7" class="N" data-node="n7"><circle cx="600.00" cy="566.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="559.00">Coastal jobs &amp;</text><text x="629.00" y="573.00">supply chains</text></g><g id="n41" class="N" data-node="n41"><circle cx="600.00" cy="628.00" r="23" fill="var(--viz-series-3)"/><text x="629.00" y="621.00">Research, data &amp;</text><text x="629.00" y="635.00">technology</text></g><g id="n39" class="N" data-node="n39"><circle cx="770.00" cy="147.50" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="140.50">Permitting &amp;</text><text x="799.00" y="154.50">authorization</text></g><g id="n34" class="N" data-node="n34"><circle cx="770.00" cy="225.00" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="218.00">NEPA environmental</text><text x="799.00" y="232.00">review</text></g><g id="n5" class="N" data-node="n5"><circle cx="770.00" cy="302.50" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="295.50">Clean Water Act /</text><text x="799.00" y="309.50">NPDES</text></g><g id="n13" class="N" data-node="n13"><circle cx="770.00" cy="380.00" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="373.00">ESA / EFH / MMPA</text><text x="799.00" y="387.00">consultation</text></g><g id="n46" class="N" data-node="n46"><circle cx="770.00" cy="457.50" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="450.50">USACE Section 10</text><text x="799.00" y="464.50">permit</text></g><g id="n17" class="N" data-node="n17"><circle cx="770.00" cy="535.00" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="528.00">FDA veterinary</text><text x="799.00" y="542.00">drug controls</text></g><g id="n32" class="N" data-node="n32"><circle cx="770.00" cy="612.50" r="23" fill="var(--viz-series-4)"/><text x="799.00" y="605.50">Monitoring &amp;</text><text x="799.00" y="619.50">reporting</text></g><g id="n42" class="N" data-node="n42"><circle cx="940.00" cy="276.67" r="23" fill="var(--viz-series-5)"/><text x="969.00" y="276.67">Site selection</text></g><g id="n30" class="N" data-node="n30"><circle cx="940.00" cy="483.33" r="23" fill="var(--viz-series-5)"/><text x="969.00" y="476.33">Marine spatial</text><text x="969.00" y="490.33">planning / AOAs</text></g><g id="n40" class="N" data-node="n40"><circle cx="1110.00" cy="158.57" r="23" fill="var(--viz-series-6)"/><text x="1139.00" y="151.57">Public &amp;</text><text x="1139.00" y="165.57">stakeholder input</text></g><g id="n11" class="N" data-node="n11"><circle cx="1110.00" cy="247.14" r="23" fill="var(--viz-series-6)"/><text x="1139.00" y="240.14">Cultural and</text><text x="1139.00" y="254.14">community fit</text></g><g id="n9" class="N" data-node="n9"><circle cx="1110.00" cy="335.71" r="23" fill="var(--viz-series-6)"/><text x="1139.00" y="328.71">Conflict with</text><text x="1139.00" y="342.71">other ocean uses</text></g><g id="n43" class="N" data-node="n43"><circle cx="1110.00" cy="424.29" r="23" fill="var(--viz-series-6)"/><text x="1139.00" y="424.29">Social acceptance</text></g><g id="n49" class="N" data-node="n49"><circle cx="260.00" cy="507.65" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="500.65">Chemotherapeutant</text><text x="289.00" y="514.65">use</text></g><g id="n50" class="N" data-node="n50"><circle cx="430.00" cy="586.67" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="579.67">Antimicrobial</text><text x="459.00" y="593.67">resistance risk</text></g><g id="n51" class="N" data-node="n51"><circle cx="260.00" cy="544.12" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="537.12">Pathogen</text><text x="289.00" y="551.12">surveillance</text></g><g id="n52" class="N" data-node="n52"><circle cx="430.00" cy="621.11" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="614.11">Jellyfish &amp;</text><text x="459.00" y="628.11">cnidarian fouling</text></g><g id="n53" class="N" data-node="n53"><circle cx="260.00" cy="580.59" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="573.59">Broodstock genetic</text><text x="289.00" y="587.59">diversity</text></g><g id="n54" class="N" data-node="n54"><circle cx="1110.00" cy="512.86" r="23" fill="var(--viz-series-6)"/><text x="1139.00" y="505.86">Food security &amp;</text><text x="1139.00" y="519.86">affordability</text></g><g id="n55" class="N" data-node="n55"><circle cx="1110.00" cy="601.43" r="23" fill="var(--viz-series-6)"/><text x="1139.00" y="594.43">Small-scale</text><text x="1139.00" y="608.43">fisheries access</text></g><g id="n56" class="N" data-node="n56"><circle cx="430.00" cy="655.56" r="23" fill="var(--viz-series-2)"/><text x="459.00" y="648.56">IMTA / nutrient</text><text x="459.00" y="662.56">recovery</text></g><g id="n57" class="N" data-node="n57"><circle cx="260.00" cy="617.06" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="617.06">Fish welfare</text></g><g id="n58" class="N" data-node="n58"><circle cx="260.00" cy="653.53" r="23" fill="var(--viz-series-1)"/><text x="289.00" y="639.53">Probiotics &amp;</text><text x="289.00" y="653.53">microbiome</text><text x="289.00" y="667.53">management</text></g>
-</svg>
+<svg id="g" viewBox="0 0 1900 1500" role="img" aria-label="Interactive dependency map with 58 concepts and 101 evidence-supported directional relationships"></svg>
 </div>
-<p class="help">Click a concept to isolate its direct dependencies. Click a line to inspect supporting source records.</p>
+<p class="help">Click a concept to isolate its direct dependencies and view source-specific page or section locators. Click a line to inspect one dependency.</p>
 </div>
-<aside><div id="d" class="card" aria-live="polite"><h2>Explore the graph</h2><p class="help">Search or click a concept.</p></div><div class="card"><h3>Visible dependencies</h3><div id="lst"></div></div></aside>
+<aside class="card" aria-live="polite"><div id="d"><h2>Explore the graph</h2><p class="help">Search or click a concept.</p></div><div class="dependency-detail"><h3>Visible dependencies</h3><div id="lst"></div></div></aside>
 </section>
 </main>
-<script id="graph-data" type="application/json">{"n": [["n35", "Offshore carnivorous finfish aquaculture", "C"], ["n23", "Formulated feed", "A"], ["n22", "Fishmeal & fish oil", "A"], ["n1", "Alternative feed ingredients", "A"], ["n16", "Essential nutrients / LC-PUFA", "A"], ["n19", "Feed conversion ratio", "A"], ["n21", "Fish health & growth", "A"], ["n12", "Disease & parasite pressure", "A"], ["n48", "Vaccination / veterinary care", "A"], ["n45", "Stocking density & stress control", "A"], ["n10", "Containment integrity", "A"], ["n44", "Sterile / triploid stock", "A"], ["n47", "Uneaten feed & fish waste", "E"], ["n33", "N & P discharge", "E"], ["n3", "Benthic organic enrichment", "E"], ["n38", "Oxygen demand / sulfides", "E"], ["n2", "Benthic biodiversity", "E"], ["n20", "Fish escapes", "E"], ["n24", "Genetic interaction with wild stocks", "E"], ["n8", "Competition with wild fish", "E"], ["n31", "Marine wildlife interactions", "E"], ["n25", "Harmful algal blooms", "E"], ["n6", "Climate / extreme weather", "E"], ["n14", "Energy & vessel use", "E"], ["n4", "Carbon footprint", "E"], ["n15", "Environmental carrying capacity", "E"], ["n36", "Offshore infrastructure cost", "B"], ["n37", "Operating & maintenance cost", "B"], ["n28", "Insurance & production risk", "B"], ["n26", "High-value seafood markets", "B"], ["n18", "Farm profitability", "B"], ["n29", "Investor confidence / finance", "B"], ["n27", "Industry scale & clustering", "B"], ["n7", "Coastal jobs & supply chains", "B"], ["n41", "Research, data & technology", "B"], ["n39", "Permitting & authorization", "L"], ["n34", "NEPA environmental review", "L"], ["n5", "Clean Water Act / NPDES", "L"], ["n13", "ESA / EFH / MMPA consultation", "L"], ["n46", "USACE Section 10 permit", "L"], ["n17", "FDA veterinary drug controls", "L"], ["n32", "Monitoring & reporting", "L"], ["n42", "Site selection", "P"], ["n30", "Marine spatial planning / AOAs", "P"], ["n40", "Public & stakeholder input", "S"], ["n11", "Cultural and community fit", "S"], ["n9", "Conflict with other ocean uses", "S"], ["n43", "Social acceptance", "S"], ["n49", "Chemotherapeutant use", "A"], ["n50", "Antimicrobial resistance risk", "E"], ["n51", "Pathogen surveillance", "A"], ["n52", "Jellyfish & cnidarian fouling", "E"], ["n53", "Broodstock genetic diversity", "A"], ["n54", "Food security & affordability", "S"], ["n55", "Small-scale fisheries access", "S"], ["n56", "IMTA / nutrient recovery", "E"], ["n57", "Fish welfare", "A"], ["n58", "Probiotics & microbiome management", "A"]], "e": [["e1", "n35", "requires", "n23", "Operational", ["S10", "S11", "S13", "S47", "S48", "S50", "S53"]], ["e2", "n22", "historically supplies protein and lipids to", "n23", "Biological", ["S1", "S10", "S11", "S48", "S53"]], ["e3", "n16", "supports", "n21", "Biological", ["S1", "S11", "S14"]], ["e4", "n1", "partly substitutes for", "n22", "Operational", ["S1", "S14", "S15", "S49", "S53"]], ["e5", "n1", "can maintain or alter", "n21", "Biological", ["S1", "S14", "S15"]], ["e6", "n1", "can reduce feed cost and price exposure", "n18", "Economic", ["S1", "S11", "S15"]], ["e7", "n19", "determines wild-fish input demand", "n22", "Environmental", ["S9", "S10", "S11", "S47", "S48", "S50", "S53"]], ["e8", "n19", "lower efficiency increases", "n47", "Environmental", ["S3", "S9", "S11"]], ["e9", "n23", "is a major operating cost", "n18", "Economic", ["S14", "S18"]], ["e10", "n23", "drives life-cycle impacts", "n4", "Environmental", ["S9", "S17"]], ["e11", "n14", "increases", "n4", "Environmental", ["S6", "S9"]], ["e12", "n35", "requires transport, feeding and maintenance energy", "n14", "Operational", ["S6", "S7"]], ["e13", "n47", "releases dissolved and particulate", "n33", "Environmental", ["S3", "S6", "S48", "S51", "S37"]], ["e14", "n47", "can cause", "n3", "Environmental", ["S3", "S6", "S17", "S48", "S51", "S37"]], ["e15", "n3", "increases sediment", "n38", "Environmental", ["S6", "S17"]], ["e16", "n38", "can reduce", "n2", "Environmental", ["S6", "S17"]], ["e17", "n42", "must match", "n15", "Environmental", ["S3", "S5", "S8"]], ["e18", "n15", "limits acceptable", "n3", "Environmental", ["S5", "S6"]], ["e19", "n42", "controls dispersion of", "n47", "Environmental", ["S3", "S6", "S7"]], ["e20", "n45", "reduces when appropriate", "n12", "Biological", ["S2", "S5", "S39"]], ["e21", "n48", "reduces", "n12", "Biological", ["S2"]], ["e22", "n12", "reduces", "n21", "Biological", ["S5", "S12", "S40", "S41", "S45", "S37"]], ["e23", "n12", "creates mortality and treatment costs", "n18", "Economic", ["S12", "S18", "S52"]], ["e24", "n12", "requires surveillance and response", "n32", "Regulatory", ["S4", "S33", "S40", "S44"]], ["e25", "n17", "governs medicines and veterinary oversight for", "n48", "Regulatory", ["S4", "S33"]], ["e26", "n6", "can broaden or intensify", "n25", "Environmental", ["S34"]], ["e27", "n25", "can cause gill damage, toxins or mortality in", "n21", "Biological", ["S34"]], ["e28", "n6", "raises storm and structural loads on", "n10", "Operational", ["S2", "S6", "S7", "S35", "S51"]], ["e29", "n10", "failure causes", "n20", "Operational", ["S2", "S20", "S35", "S38", "S51"]], ["e30", "n32", "inspection and maintenance support", "n10", "Regulatory", ["S2", "S20", "S35"]], ["e31", "n20", "may enable interbreeding and alter fitness", "n24", "Environmental", ["S2", "S20"]], ["e32", "n44", "reduces", "n24", "Biological", ["S2", "S20"]], ["e33", "n20", "may create", "n8", "Environmental", ["S2", "S20"]], ["e34", "n20", "represent stock loss", "n18", "Economic", ["S20"]], ["e35", "n35", "creates entanglement, predation and vessel risks", "n31", "Environmental", ["S7", "S16"]], ["e36", "n31", "can increase gear damage and mitigation cost", "n37", "Economic", ["S16"]], ["e37", "n42", "can avoid sensitive habitats and migration areas", "n31", "Environmental", ["S7", "S8", "S43", "S50", "S51", "S37"]], ["e38", "n42", "can reduce", "n9", "Societal", ["S8", "S27"]], ["e39", "n30", "identifies potentially suitable areas for", "n42", "Governance", ["S26", "S32"]], ["e40", "n40", "informs", "n30", "Governance", ["S27", "S31", "S32"]], ["e41", "n11", "shapes", "n43", "Societal", ["S30"]], ["e42", "n40", "can strengthen or weaken", "n43", "Societal", ["S27", "S30", "S31"]], ["e43", "n9", "reduces", "n43", "Societal", ["S27", "S30"]], ["e44", "n30", "aims to minimize", "n9", "Governance", ["S8", "S26", "S32"]], ["e45", "n34", "evaluates alternatives and impacts before", "n30", "Regulatory", ["S25", "S26", "S27"]], ["e46", "n39", "authorizes development and operation of", "n35", "Regulatory", ["S24", "S25", "S33"]], ["e47", "n46", "is commonly required for offshore structures within", "n39", "Regulatory", ["S33"]], ["e48", "n5", "requires discharge authorization within", "n39", "Regulatory", ["S3", "S33"]], ["e49", "n13", "may condition or delay", "n39", "Regulatory", ["S25", "S33"]], ["e50", "n32", "is imposed through", "n39", "Regulatory", ["S3", "S25", "S33"]], ["e51", "n41", "improves methods and risk thresholds for", "n32", "Research", ["S21", "S28", "S44", "S46"]], ["e52", "n41", "develops", "n1", "Research", ["S1", "S14", "S15", "S21", "S49", "S53"]], ["e53", "n41", "improves", "n10", "Research", ["S2", "S21"]], ["e54", "n41", "provides environmental and socioeconomic data for", "n30", "Research", ["S21", "S26", "S28"]], ["e55", "n26", "creates demand for", "n35", "Economic", ["S10", "S19", "S47", "S50", "S53"]], ["e56", "n26", "supports revenue and price", "n18", "Economic", ["S10", "S19", "S50"]], ["e57", "n36", "raises financing needs and barriers to", "n29", "Economic", ["S6", "S7", "S12", "S52"]], ["e58", "n37", "reduces", "n18", "Economic", ["S6", "S12", "S18", "S43", "S50", "S51"]], ["e59", "n28", "can enable lender support and risk transfer", "n29", "Economic", ["S18"]], ["e60", "n28", "absorbs some production losses but adds cost to", "n18", "Economic", ["S18"]], ["e61", "n39", "predictability increases", "n29", "Economic", ["S28", "S29", "S32"]], ["e62", "n29", "enables", "n27", "Economic", ["S29"]], ["e63", "n27", "can create cumulative impacts on", "n3", "Environmental", ["S7", "S8", "S17"]], ["e64", "n27", "can increase", "n9", "Societal", ["S7", "S8", "S27"]], ["e65", "n27", "can expand", "n7", "Economic", ["S19", "S29"]], ["e66", "n7", "may improve through local benefits", "n43", "Societal", ["S19", "S29", "S30"]], ["e67", "n18", "attracts", "n29", "Economic", ["S12", "S29"]], ["e68", "n5", "adds compliance and monitoring costs to", "n18", "Economic", ["S3", "S33"]], ["e69", "n13", "constrains location through protected-species and habitat review", "n42", "Regulatory", ["S25", "S33"]], ["e70", "n34", "provides formal opportunities for", "n40", "Governance", ["S27", "S32"]], ["e71", "n41", "reduces uncertainty and improves performance of", "n35", "Research", ["S21", "S28"]], ["e72", "n22", "contributes through reduction fisheries and feed production to", "n4", "Environmental", ["S9", "S10", "S17"]], ["e73", "n22", "creates commodity-price exposure for", "n18", "Economic", ["S11", "S13"]], ["e74", "n12", "can increase reliance on", "n49", "Biological", ["S39", "S42"]], ["e75", "n49", "can select for", "n50", "Environmental", ["S39"]], ["e76", "n17", "governs approved", "n49", "Regulatory", ["S39"]], ["e77", "n49", "can affect sediments and non-target organisms, reducing", "n2", "Environmental", ["S39", "S43", "S51"]], ["e78", "n51", "enables earlier control of", "n12", "Biological", ["S40", "S44"]], ["e79", "n41", "develops efficient", "n51", "Research", ["S44"]], ["e80", "n52", "causes gill injury and increases", "n12", "Biological", ["S41", "S45"]], ["e81", "n52", "can reduce", "n21", "Biological", ["S41", "S45"]], ["e82", "n42", "influences exposure to", "n52", "Environmental", ["S41", "S45"]], ["e83", "n53", "reduces inbreeding risk and supports", "n21", "Biological", ["S38"]], ["e84", "n41", "characterizes and manages", "n53", "Research", ["S38"]], ["e85", "n35", "has a contested contribution to", "n54", "Societal", ["S47", "S48", "S50"]], ["e86", "n26", "can limit affordability and access within", "n54", "Economic", ["S47", "S50"]], ["e87", "n22", "can divert small pelagic fish from direct human use, affecting", "n54", "Societal", ["S47", "S48", "S50"]], ["e88", "n30", "can constrain or protect", "n55", "Governance", ["S43", "S50"]], ["e89", "n9", "can displace or reduce", "n55", "Societal", ["S43", "S50", "S51"]], ["e90", "n40", "can incorporate local knowledge to protect", "n55", "Governance", ["S43"]], ["e91", "n56", "can reduce net", "n33", "Environmental", ["S49"]], ["e92", "n56", "can improve", "n57", "Biological", ["S49"]], ["e93", "n41", "develops and optimizes", "n56", "Research", ["S49"]], ["e94", "n12", "increases", "n28", "Economic", ["S40", "S52"]], ["e95", "n12", "increases treatment and response components of", "n37", "Economic", ["S39", "S52"]], ["e96", "n49", "can intensify", "n9", "Societal", ["S43", "S51"]], ["e97", "n45", "when poorly managed can increase reliance on", "n49", "Biological", ["S39"]], ["e98", "n58", "can improve", "n21", "Biological", ["S42"]], ["e99", "n58", "may reduce reliance on", "n49", "Biological", ["S42"]], ["e100", "n41", "uses satellite imagery to verify", "n27", "Research", ["S46"]]], "s": [["S1", "Sustainable Aquaculture Feeds and Fish Nutrition (NOAA, 2022)"], ["S2", "Potential Risks of Aquaculture Escapes (NOAA, 2022)"], ["S3", "Aquaculture and Environmental Interactions (NOAA, 2022)"], ["S4", "Antibiotic Use in Finfish (NOAA, 2022)"], ["S5", "Towards Environmental Sustainability in Marine Finfish Aquaculture (2021)"], ["S6", "Environmental Issues of Fish Farming in Offshore Waters (Holmer, 2010)"], ["S7", "Toward an Environmentally Responsible Offshore Aquaculture Industry in the U.S. (Fujita et al., 2023)"], ["S8", "Offshore Aquaculture: Spatial Planning Principles (Gentry et al., 2017)"], ["S9", "Assessment of Environmental Impact of Carnivorous Finfish Systems Using LCA (Aubin et al., 2009)"], ["S10", "Aquaculture and Ocean Resources: Raising Tigers of the Sea (Naylor & Burke, 2005)"], ["S11", "State of Information on Salmon Aquaculture Feed and the Environment (Tacon, 2005)"], ["S12", "Economic Sustainability of Marine Aquaculture (WHOI, 2007)"], ["S13", "Resources for Fish Feed in Future Mariculture (Olsen, 2011)"], ["S14", "Use of Macroalgae in Feeds for Finfish Aquaculture (Hughes et al., 2025)"], ["S15", "Soy-based Diets for Summer Flounder Aquaculture (Ward, 2014)"], ["S16", "Aquaculture and Marine Mammals: Co-existence or Conflict? (Kemper et al., 2003)"], ["S17", "Biodiversity Impacts of Mediterranean Finfish Aquaculture (Munir et al., 2026)"], ["S18", "Risk Assessment of Mediterranean Seabass and Seabream Industry (Theodorou et al., 2010)"], ["S19", "Opportunities for U.S. Marine Finfish Aquaculture (Rexroad et al., 2021)"], ["S20", "NOAA Net-Pen Aquaculture FAQ"], ["S21", "NOAA Finfish Aquaculture Research"], ["S22", "National Aquaculture Act of 1980"], ["S23", "Executive Order 13921 (2020)"], ["S24", "NOAA Regulating Aquaculture"], ["S25", "Regulation of Marine Aquaculture (NOAA, 2022)"], ["S26", "Aquaculture Opportunity Areas (NOAA)"], ["S27", "Public Scoping Report: Southern California AOAs"], ["S28", "Strategic Plan to Enhance Regulatory Efficiency in Aquaculture (2022)"], ["S29", "Strategic Plan for Aquaculture Economic Development (2024)"], ["S30", "NOAA Considering Culture for Aquaculture"], ["S31", "Public Provides Important Insights into AOAs"], ["S32", "Aquaculture Opportunity Areas Fact Sheet (2024)"], ["S33", "Federal Regulatory Fact Sheets (NOAA/USACE/EPA/FDA/USFWS/USDA)"], ["S34", "Harmful Algal Bloom Impacts on Aquaculture (NOAA, 2022)"], ["S35", "Runaway Fish: Escapes from Marine Farms Raise Concerns about Native Wildlife"], ["S37", "A Matter of Scale"], ["S38", "Population Structure and Genetic Connectivity of Malabar Red Snapper"], ["S39", "A Data Compilation of Antibiotic Treatments in Canadian Finfish Aquaculture, 2016–2021"], ["S40", "Modeling Parasite Dynamics on Farmed Salmon for Precautionary Conservation Management of Wild Salmon"], ["S41", "Jellyfish Stings Trigger Gill Disorders and Increased Mortality in Farmed Sparus aurata"], ["S42", "Fishing for the Right Probiotic"], ["S43", "Impact of Aquaculture on Commercial Fisheries: Fishermen's Local Ecological Knowledge"], ["S44", "eRNA/eDNA Pathogen Screening in Atlantic Salmon Aquaculture"], ["S45", "Successional Dynamics of Marine Fouling Hydroids at a Finfish Facility"], ["S46", "Fish Farms at Sea: The Ground Truth from Google Earth"], ["S47", "Farming Need Not Replace Fishing if Stocks Are Rebuilt"], ["S48", "Effect of Aquaculture on World Fish Supplies"], ["S49", "Integrated Biotechnological Strategies for Mediterranean Sea Bass and Sea Bream"], ["S50", "Farming Fish in the Sea Will Not Nourish the World"], ["S51", "The Salmon Farms of Cobscook Bay"], ["S52", "Economic Effects of Disease Outbreaks on U.S. Salmonid Farms"], ["S53", "From Fishing to the Sustainable Farming of Carnivorous Marine Finfish"]]}</script>
+<script id="graph-data" type="application/json">{"n": [["n35", "Offshore carnivorous finfish aquaculture", "C"], ["n23", "Formulated feed", "A"], ["n22", "Fishmeal & fish oil", "A"], ["n1", "Alternative feed ingredients", "A"], ["n16", "Essential nutrients / LC-PUFA", "A"], ["n19", "Feed conversion ratio", "A"], ["n21", "Fish health & growth", "A"], ["n12", "Disease & parasite pressure", "A"], ["n48", "Vaccination / veterinary care", "A"], ["n45", "Stocking density & stress control", "A"], ["n10", "Containment integrity", "A"], ["n44", "Sterile / triploid stock", "A"], ["n47", "Uneaten feed & fish waste", "E"], ["n33", "N & P discharge", "E"], ["n3", "Benthic organic enrichment", "E"], ["n38", "Oxygen demand / sulfides", "E"], ["n2", "Benthic biodiversity", "E"], ["n20", "Fish escapes", "E"], ["n24", "Genetic interaction with wild stocks", "E"], ["n8", "Competition with wild fish", "E"], ["n31", "Marine wildlife interactions", "E"], ["n25", "Harmful algal blooms", "E"], ["n6", "Climate / extreme weather", "E"], ["n14", "Energy & vessel use", "E"], ["n4", "Carbon footprint", "E"], ["n15", "Environmental carrying capacity", "E"], ["n36", "Offshore infrastructure cost", "B"], ["n37", "Operating & maintenance cost", "B"], ["n28", "Insurance & production risk", "B"], ["n26", "High-value seafood markets", "B"], ["n18", "Farm profitability", "B"], ["n29", "Investor confidence / finance", "B"], ["n27", "Industry scale & clustering", "B"], ["n7", "Coastal jobs & supply chains", "B"], ["n41", "Research, data & technology", "B"], ["n39", "Permitting & authorization", "L"], ["n34", "NEPA environmental review", "L"], ["n5", "Clean Water Act / NPDES", "L"], ["n13", "ESA / EFH / MMPA consultation", "L"], ["n46", "USACE Section 10 permit", "L"], ["n17", "FDA veterinary drug controls", "L"], ["n32", "Monitoring & reporting", "L"], ["n42", "Site selection", "P"], ["n30", "Marine spatial planning / AOAs", "P"], ["n40", "Public & stakeholder input", "S"], ["n11", "Cultural and community fit", "S"], ["n9", "Conflict with other ocean uses", "S"], ["n43", "Social acceptance", "S"], ["n49", "Chemotherapeutant use", "A"], ["n50", "Antimicrobial resistance risk", "E"], ["n51", "Pathogen surveillance", "A"], ["n52", "Jellyfish & cnidarian fouling", "E"], ["n53", "Broodstock genetic diversity", "A"], ["n54", "Food security & affordability", "S"], ["n55", "Small-scale fisheries access", "S"], ["n56", "IMTA / nutrient recovery", "E"], ["n57", "Fish welfare", "A"], ["n58", "Probiotics & microbiome management", "A"]], "e": [["e1", "n35", "requires", "n23", "Operational", ["S10", "S11", "S13", "S47", "S48", "S50", "S53"]], ["e2", "n22", "historically supplies protein and lipids to", "n23", "Biological", ["S1", "S10", "S11", "S48", "S53"]], ["e3", "n16", "supports", "n21", "Biological", ["S1", "S11", "S14"]], ["e4", "n1", "partly substitutes for", "n22", "Operational", ["S1", "S14", "S15", "S49", "S53"]], ["e5", "n1", "can maintain or alter", "n21", "Biological", ["S1", "S14", "S15"]], ["e6", "n1", "can reduce feed cost and price exposure", "n18", "Economic", ["S1", "S11", "S15"]], ["e7", "n19", "determines wild-fish input demand", "n22", "Environmental", ["S9", "S10", "S11", "S47", "S48", "S50", "S53"]], ["e8", "n19", "lower efficiency increases", "n47", "Environmental", ["S3", "S9", "S11"]], ["e9", "n23", "is a major operating cost", "n18", "Economic", ["S14", "S18"]], ["e10", "n23", "drives life-cycle impacts", "n4", "Environmental", ["S9", "S17"]], ["e11", "n14", "increases", "n4", "Environmental", ["S6", "S9"]], ["e12", "n35", "requires transport, feeding and maintenance energy", "n14", "Operational", ["S6", "S7"]], ["e13", "n47", "releases dissolved and particulate", "n33", "Environmental", ["S3", "S6", "S48", "S51", "S37"]], ["e14", "n47", "can cause", "n3", "Environmental", ["S3", "S6", "S17", "S48", "S51", "S37"]], ["e15", "n3", "increases sediment", "n38", "Environmental", ["S6", "S17"]], ["e16", "n38", "can reduce", "n2", "Environmental", ["S6", "S17"]], ["e17", "n42", "must match", "n15", "Environmental", ["S3", "S5", "S8"]], ["e18", "n15", "limits acceptable", "n3", "Environmental", ["S5", "S6"]], ["e19", "n42", "controls dispersion of", "n47", "Environmental", ["S3", "S6", "S7"]], ["e20", "n45", "reduces when appropriate", "n12", "Biological", ["S2", "S5", "S39"]], ["e21", "n48", "reduces", "n12", "Biological", ["S2"]], ["e22", "n12", "reduces", "n21", "Biological", ["S5", "S12", "S40", "S41", "S45", "S37"]], ["e23", "n12", "creates mortality and treatment costs", "n18", "Economic", ["S12", "S18", "S52"]], ["e24", "n12", "requires surveillance and response", "n32", "Regulatory", ["S4", "S33", "S40", "S44"]], ["e25", "n17", "governs medicines and veterinary oversight for", "n48", "Regulatory", ["S4", "S33"]], ["e26", "n6", "can broaden or intensify", "n25", "Environmental", ["S34"]], ["e27", "n25", "can cause gill damage, toxins or mortality in", "n21", "Biological", ["S34"]], ["e28", "n6", "raises storm and structural loads on", "n10", "Operational", ["S2", "S6", "S7", "S35", "S51"]], ["e29", "n10", "failure causes", "n20", "Operational", ["S2", "S20", "S35", "S38", "S51"]], ["e30", "n32", "inspection and maintenance support", "n10", "Regulatory", ["S2", "S20", "S35"]], ["e31", "n20", "may enable interbreeding and alter fitness", "n24", "Environmental", ["S2", "S20"]], ["e32", "n44", "reduces", "n24", "Biological", ["S2", "S20"]], ["e33", "n20", "may create", "n8", "Environmental", ["S2", "S20"]], ["e34", "n20", "represent stock loss", "n18", "Economic", ["S20"]], ["e35", "n35", "creates entanglement, predation and vessel risks", "n31", "Environmental", ["S7", "S16"]], ["e36", "n31", "can increase gear damage and mitigation cost", "n37", "Economic", ["S16"]], ["e37", "n42", "can avoid sensitive habitats and migration areas", "n31", "Environmental", ["S7", "S8", "S43", "S50", "S51", "S37"]], ["e38", "n42", "can reduce", "n9", "Societal", ["S8", "S27"]], ["e39", "n30", "identifies potentially suitable areas for", "n42", "Governance", ["S26", "S32"]], ["e40", "n40", "informs", "n30", "Governance", ["S27", "S31", "S32"]], ["e41", "n11", "shapes", "n43", "Societal", ["S30"]], ["e42", "n40", "can strengthen or weaken", "n43", "Societal", ["S27", "S30", "S31"]], ["e43", "n9", "reduces", "n43", "Societal", ["S27", "S30"]], ["e44", "n30", "aims to minimize", "n9", "Governance", ["S8", "S26", "S32"]], ["e45", "n34", "evaluates alternatives and impacts before", "n30", "Regulatory", ["S25", "S26", "S27"]], ["e46", "n39", "authorizes development and operation of", "n35", "Regulatory", ["S24", "S25", "S33"]], ["e47", "n46", "is commonly required for offshore structures within", "n39", "Regulatory", ["S33"]], ["e48", "n5", "requires discharge authorization within", "n39", "Regulatory", ["S3", "S33"]], ["e49", "n13", "may condition or delay", "n39", "Regulatory", ["S25", "S33"]], ["e50", "n32", "is imposed through", "n39", "Regulatory", ["S3", "S25", "S33"]], ["e51", "n41", "improves methods and risk thresholds for", "n32", "Research", ["S21", "S28", "S44", "S46"]], ["e52", "n41", "develops", "n1", "Research", ["S1", "S14", "S15", "S21", "S49", "S53"]], ["e53", "n41", "improves", "n10", "Research", ["S2", "S21"]], ["e54", "n41", "provides environmental and socioeconomic data for", "n30", "Research", ["S21", "S26", "S28"]], ["e55", "n26", "creates demand for", "n35", "Economic", ["S10", "S19", "S47", "S50", "S53"]], ["e56", "n26", "supports revenue and price", "n18", "Economic", ["S10", "S19", "S50"]], ["e57", "n36", "raises financing needs and barriers to", "n29", "Economic", ["S6", "S7", "S12", "S52"]], ["e58", "n37", "reduces", "n18", "Economic", ["S6", "S12", "S18", "S43", "S50", "S51"]], ["e59", "n28", "can enable lender support and risk transfer", "n29", "Economic", ["S18"]], ["e60", "n28", "absorbs some production losses but adds cost to", "n18", "Economic", ["S18"]], ["e61", "n39", "predictability increases", "n29", "Economic", ["S28", "S29", "S32"]], ["e62", "n29", "enables", "n27", "Economic", ["S29"]], ["e63", "n27", "can create cumulative impacts on", "n3", "Environmental", ["S7", "S8", "S17"]], ["e64", "n27", "can increase", "n9", "Societal", ["S7", "S8", "S27"]], ["e65", "n27", "can expand", "n7", "Economic", ["S19", "S29"]], ["e66", "n7", "may improve through local benefits", "n43", "Societal", ["S19", "S29", "S30"]], ["e67", "n18", "attracts", "n29", "Economic", ["S12", "S29"]], ["e68", "n5", "adds compliance and monitoring costs to", "n18", "Economic", ["S3", "S33"]], ["e69", "n13", "constrains location through protected-species and habitat review", "n42", "Regulatory", ["S25", "S33"]], ["e70", "n34", "provides formal opportunities for", "n40", "Governance", ["S27", "S32"]], ["e71", "n41", "reduces uncertainty and improves performance of", "n35", "Research", ["S21", "S28"]], ["e72", "n22", "contributes through reduction fisheries and feed production to", "n4", "Environmental", ["S9", "S10", "S17"]], ["e73", "n22", "creates commodity-price exposure for", "n18", "Economic", ["S11", "S13"]], ["e74", "n12", "can increase reliance on", "n49", "Biological", ["S39", "S42"]], ["e75", "n49", "can select for", "n50", "Environmental", ["S39"]], ["e76", "n17", "governs approved", "n49", "Regulatory", ["S39"]], ["e77", "n49", "can affect sediments and non-target organisms, reducing", "n2", "Environmental", ["S39", "S43", "S51"]], ["e78", "n51", "enables earlier control of", "n12", "Biological", ["S40", "S44"]], ["e79", "n41", "develops efficient", "n51", "Research", ["S44"]], ["e80", "n52", "causes gill injury and increases", "n12", "Biological", ["S41", "S45"]], ["e81", "n52", "can reduce", "n21", "Biological", ["S41", "S45"]], ["e82", "n42", "influences exposure to", "n52", "Environmental", ["S41", "S45"]], ["e83", "n53", "reduces inbreeding risk and supports", "n21", "Biological", ["S38"]], ["e84", "n41", "characterizes and manages", "n53", "Research", ["S38"]], ["e85", "n35", "has a contested contribution to", "n54", "Societal", ["S47", "S48", "S50"]], ["e86", "n26", "can limit affordability and access within", "n54", "Economic", ["S47", "S50"]], ["e87", "n22", "can divert small pelagic fish from direct human use, affecting", "n54", "Societal", ["S47", "S48", "S50"]], ["e88", "n30", "can constrain or protect", "n55", "Governance", ["S43", "S50"]], ["e89", "n9", "can displace or reduce", "n55", "Societal", ["S43", "S50", "S51"]], ["e90", "n40", "can incorporate local knowledge to protect", "n55", "Governance", ["S43"]], ["e91", "n56", "can reduce net", "n33", "Environmental", ["S49"]], ["e92", "n56", "can improve", "n57", "Biological", ["S49"]], ["e93", "n41", "develops and optimizes", "n56", "Research", ["S49"]], ["e94", "n12", "increases", "n28", "Economic", ["S40", "S52"]], ["e95", "n12", "increases treatment and response components of", "n37", "Economic", ["S39", "S52"]], ["e96", "n49", "can intensify", "n9", "Societal", ["S43", "S51"]], ["e97", "n45", "when poorly managed can increase reliance on", "n49", "Biological", ["S39"]], ["e98", "n58", "can improve", "n21", "Biological", ["S42"]], ["e99", "n58", "may reduce reliance on", "n49", "Biological", ["S42"]], ["e100", "n41", "uses satellite imagery to verify", "n27", "Research", ["S46"]], ["e101", "n17", "regulates when medicated", "n23", "Regulatory", ["S4", "S54"]]], "s": [["S1", "Sustainable Aquaculture Feeds and Fish Nutrition (NOAA, 2022)", "pp. 1-2", "Fact-Sheet-Sustainable-Aquaculture-Feeds-and-Fish-Nutrition.pdf"], ["S2", "Potential Risks of Aquaculture Escapes (NOAA, 2022)", "pp. 1-2", "Fact-Sheet-Potential-Risks-of-Aquaculture-Escapes.pdf"], ["S3", "Aquaculture and Environmental Interactions (NOAA, 2022)", "pp. 1-2", "Fact-Sheet-Aquaculture-and-Environmental-Interactions.pdf"], ["S4", "Antibiotic Use in Finfish (NOAA, 2022)", "pp. 1-2", "Fact-Sheet-Antibiotic-Use-in-Finfish.pdf"], ["S5", "Towards Environmental Sustainability in Marine Finfish Aquaculture (2021)", "throughout", "Towards_Environmental_Sustainability_in_Marine_Fin.pdf"], ["S6", "Environmental Issues of Fish Farming in Offshore Waters (Holmer, 2010)", "pp. 57-70", "Environmental_issues_of_fish_farming_in_offshore_w.pdf"], ["S7", "Toward an Environmentally Responsible Offshore Aquaculture Industry in the U.S. (Fujita et al., 2023)", "pp. 1-17", "main.pdf"], ["S8", "Offshore Aquaculture: Spatial Planning Principles (Gentry et al., 2017)", "pp. 733-743", "Ecology and Evolution - 2016 - Gentry - Offshore aquaculture  Spatial planning principles for sustainable development.pdf"], ["S9", "Assessment of Environmental Impact of Carnivorous Finfish Systems Using LCA (Aubin et al., 2009)", "pp. 354-361", "JCLP1831.pdf"], ["S10", "Aquaculture and Ocean Resources: Raising Tigers of the Sea (Naylor & Burke, 2005)", "pp. 185-218", "213299.pdf"], ["S11", "State of Information on Salmon Aquaculture Feed and the Environment (Tacon, 2005)", "sections 1, 6-7", "State_of_information_on_salmon_aquaculture_and_the.pdf"], ["S12", "Economic Sustainability of Marine Aquaculture (WHOI, 2007)", "summary and risk sections", "Economics_of_aquaculture_20583.pdf"], ["S13", "Resources for Fish Feed in Future Mariculture (Olsen, 2011)", "pp. 187-200", "q001p187.pdf"], ["S14", "Use of Macroalgae in Feeds for Finfish Aquaculture (Hughes et al., 2025)", "sections 1-5", "faquc-4-1570842.pdf"], ["S15", "Soy-based Diets for Summer Flounder Aquaculture (Ward, 2014)", "abstract and feed trials", "NUTRITIONAL AND IMMUNOLOGICAL EVALUATION OF SOY-BASED DIETS FOR S.pdf"], ["S16", "Aquaculture and Marine Mammals: Co-existence or Conflict? (Kemper et al., 2003)", "pp. 208 onward", "Kemperetal2003.pdf"], ["S17", "Biodiversity Impacts of Mediterranean Finfish Aquaculture (Munir et al., 2026)", "pp. 1-18", "s13762-026-07285-z.pdf"], ["S18", "Risk Assessment of Mediterranean Seabass and Seabream Industry (Theodorou et al., 2010)", "pp. 1-6", "375.pdf"], ["S19", "Opportunities for U.S. Marine Finfish Aquaculture (Rexroad et al., 2021)", "pp. 501-508", "Opportunities for U.S. marine finfish aquaculture - Rexroad - 2021 - Journal of the World Aquaculture Society - Wiley Online Library.pdf"], ["S20", "NOAA Net-Pen Aquaculture FAQ", "escape, triploidy, feed, disease sections", "https://www.fisheries.noaa.gov/west-coast/aquaculture/net-pen-aquaculture-pacific-northwest-frequently-asked-questions"], ["S21", "NOAA Finfish Aquaculture Research", "research program", "https://www.fisheries.noaa.gov/national/aquaculture/noaa-finfish-aquaculture-research"], ["S22", "National Aquaculture Act of 1980", "policy, plan, coordination provisions", "https://www.agriculture.senate.gov/imo/media/doc/National%20Aquaculture%20Act%20Of%201980.pdf"], ["S23", "Executive Order 13921 (2020)", "aquaculture permitting and AOA provisions", "https://www.federalregister.gov/documents/2020/05/12/2020-10315/promoting-american-seafood-competitiveness-and-economic-growth"], ["S24", "NOAA Regulating Aquaculture", "federal roles and permits", "https://www.fisheries.noaa.gov/national/aquaculture/regulating-aquaculture"], ["S25", "Regulation of Marine Aquaculture (NOAA, 2022)", "pp. 1-2", "Fact-Sheet-Regulation-of-Marine-Aquaculture.pdf"], ["S26", "Aquaculture Opportunity Areas (NOAA)", "AOA process", "https://www.fisheries.noaa.gov/topic/aquaculture/aquaculture-opportunity-areas"], ["S27", "Public Scoping Report: Southern California AOAs", "highlights, prompts 2-16, appendices", "public-scoping-report.pdf"], ["S28", "Strategic Plan to Enhance Regulatory Efficiency in Aquaculture (2022)", "goals and actions", "2022 NSTC Subcomittee on Aquaculture Regulatory Efficiency Plan_Final 508 compliant.pdf"], ["S29", "Strategic Plan for Aquaculture Economic Development (2024)", "goals and actions", "2024 Strategic Plan for Aquaculture Economic Development.pdf"], ["S30", "NOAA Considering Culture for Aquaculture", "social science and cultural dimensions", "https://www.fisheries.noaa.gov/feature-story/considering-culture-aquaculture-noaas-efforts-expand-aquaculture-social-science"], ["S31", "Public Provides Important Insights into AOAs", "public input and planning", "https://www.fisheries.noaa.gov/feature-story/public-provides-important-insights-aquaculture-opportunity-areas"], ["S32", "Aquaculture Opportunity Areas Fact Sheet (2024)", "pp. 1-2", "Fact-Sheet-Aquaculture-Opportunity-Areas-2024.pptx.pdf"], ["S33", "Federal Regulatory Fact Sheets (NOAA/USACE/EPA/FDA/USFWS/USDA)", "respective authority and permit sections", "multiple uploaded regulatory fact sheets"], ["S34", "Harmful Algal Bloom Impacts on Aquaculture (NOAA, 2022)", "pp. 1-2; finfish-relevant portions only", "Fact-Sheet-Harmful-Algal-Bloom-Impacts-on-Aquaculture.pdf"], ["S35", "Runaway Fish: Escapes from Marine Farms Raise Concerns about Native Wildlife", "full article", "Runaway_fish_escapes_from_mari.pdf"], ["S37", "A Matter of Scale", "full article", "A_Matter_of_Scale.pdf"], ["S38", "Population Structure and Genetic Connectivity of Malabar Red Snapper", "abstract and management implications", "Population Structure and Genetic Connectivity of Malabar Red Snapper (Lutjanus malabaricus) Across the South China Sea and Northern Australia - Implications for Aquaculture and Broodstock Management..pdf"], ["S39", "A Data Compilation of Antibiotic Treatments in Canadian Finfish Aquaculture, 2016–2021", "abstract and marine-site analysis", "A data compilation of antibiotic treatments in Canadian finfish aquaculture from 2016 to 2021 and the cumulative usage of antibiotics and antiparasitic drugs at marine sites..pdf"], ["S40", "Modeling Parasite Dynamics on Farmed Salmon for Precautionary Conservation Management of Wild Salmon", "model and conservation-management findings", "Modeling Parasite Dynamics on Farmed Salmon for Precautionary Conservation Management of Wild Salmon..pdf"], ["S41", "Jellyfish Stings Trigger Gill Disorders and Increased Mortality in Farmed Sparus aurata", "abstract and experimental findings", "Jellyfish Stings Trigger Gill Disorders and Increased Mortality in Farmed Sparus aurata (Linnaeus, 1758) in the Mediterranean Sea..pdf"], ["S42", "Fishing for the Right Probiotic", "salmonid health and probiotic sections", "Fishing for the right probiotic - host-microbe interactions at the interface of effective aquaculture strategies..pdf"], ["S43", "Impact of Aquaculture on Commercial Fisheries: Fishermen's Local Ecological Knowledge", "abstract and findings", "Impact of Aquaculture on Commercial Fisheries - Fishermen's Local Ecological Knowledge..pdf"], ["S44", "eRNA/eDNA Pathogen Screening in Atlantic Salmon Aquaculture", "abstract and methods", "A refinement to eRNA and eDNA-based detection methods for reliable and cost-efficient screening of pathogens in Atlantic salmon aquaculture..pdf"], ["S45", "Successional Dynamics of Marine Fouling Hydroids at a Finfish Facility", "abstract and conclusions", "Successional dynamics of marine fouling hydroids (Cnidaria - Hydrozoa) at a finfish aquaculture facility in the Mediterranean Sea..pdf"], ["S46", "Fish Farms at Sea: The Ground Truth from Google Earth", "abstract and methods", "Fish Farms at Sea - The Ground Truth from Google Earth.pdf"], ["S47", "Farming Need Not Replace Fishing if Stocks Are Rebuilt", "full text", "Farming need not replace fishing if stocks are rebuilt.pdf"], ["S48", "Effect of Aquaculture on World Fish Supplies", "throughout", "Effect of aquaculture on world fish supplies.pdf"], ["S49", "Integrated Biotechnological Strategies for Mediterranean Sea Bass and Sea Bream", "IMTA and welfare sections", "Integrated_Biotechnological_St.pdf"], ["S50", "Farming Fish in the Sea Will Not Nourish the World", "throughout", "Farming_fish_in_the_sea_will_n.pdf"], ["S51", "The Salmon Farms of Cobscook Bay", "full text", "ProQuestDocuments-2026-07-17.pdf"], ["S52", "Economic Effects of Disease Outbreaks on U.S. Salmonid Farms", "abstract and modeled thresholds", "Economic_effects_of_disease_ou (1).pdf"], ["S53", "From Fishing to the Sustainable Farming of Carnivorous Marine Finfish", "throughout", "from-fishing-to-sustainable-farming.pdf"], ["S54", "FDA CVM Federal Aquaculture Regulatory Fact Sheet Series", "PDF p. 2 (medicated animal feeds and feed-mill licensing)", "FDA-CVM-Federal Aquaculture Regulatory Fact Sheet Series(2).pdf"]]}</script>
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-  const D=JSON.parse(document.getElementById('graph-data').textContent);
+(()=>{
+  const root=document.getElementById('offshore-carnivorous-finfish-dependency-map');
+  if(!root)return;
+  const $=selector=>root.querySelector(selector);
+  const $$=selector=>root.querySelectorAll(selector);
+  const D=JSON.parse($('#graph-data').textContent);
   const CN={C:'Core',A:'Animal husbandry',E:'Environmental impacts',B:'Business',L:'Law',P:'Politics',S:'Societal impacts'};
   const CV={C:'--viz-accent',A:'--viz-series-1',E:'--viz-series-2',B:'--viz-series-3',L:'--viz-series-4',P:'--viz-series-5',S:'--viz-series-6'};
   const N=Object.fromEntries(D.n.map(x=>[x[0],{label:x[1],cat:x[2]}]));
-  const S=Object.fromEntries(D.s);
-  const q=document.getElementById('q'),c=document.getElementById('c'),t=document.getElementById('t'),d=document.getElementById('d'),lst=document.getElementById('lst'),st=document.getElementById('st'),fs=document.getElementById('fs'),leg=document.getElementById('leg');
-  const svg=document.getElementById('g'),zin=document.getElementById('zin'),zout=document.getElementById('zout'),zfit=document.getElementById('zfit'),zoomreadout=document.getElementById('zoomreadout');
-  const baseView={x:0,y:0,w:1200,h:760};
+  const S=Object.fromEntries(D.s.map(x=>[x[0],{title:x[1],locator:x[2]||'Page not specified',location:x[3]||''}]));
+  const esc=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const q=$('#q'),c=$('#c'),t=$('#t'),d=$('#d'),lst=$('#lst'),st=$('#st'),leg=$('#leg');
+  const svg=$('#g'),zin=$('#zin'),zout=$('#zout'),zfit=$('#zfit'),zoomreadout=$('#zoomreadout');
+  let baseView={x:0,y:0,w:736,h:1100};
   let view={...baseView};
+  function applyView(){
+    view.w=Math.min(baseView.w,Math.max(Math.min(260,baseView.w),view.w));
+    view.h=view.w/baseView.w*baseView.h;
+    view.x=Math.max(0,Math.min(view.x,baseView.w-view.w));
+    view.y=Math.max(0,Math.min(view.y,baseView.h-view.h));
+    svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+    zoomreadout.textContent = `${Math.round((baseView.w / view.w) * 100)}%`;
+  }
+  function zoomBy(factor){
+    const cx = view.x + view.w / 2;
+    const cy = view.y + view.h / 2;
+    let newW = view.w * factor;
+    let newH = view.h * factor;
+    const minW = Math.min(260,baseView.w);
+    const maxW = baseView.w;
+    if(newW < minW){
+      newH *= minW / newW;
+      newW = minW;
+    }
+    if(newW > maxW){
+      newH *= maxW / newW;
+      newW = maxW;
+    }
+    view = {
+      x: cx - newW / 2,
+      y: cy - newH / 2,
+      w: newW,
+      h: newH
+    };
+    applyView();
+  }
+  function fitMap(){
+    view = {...baseView};
+    applyView();
+  }
+  function wrapLabel(label,maxChars){
+    const words=label.split(/\s+/);
+    const lines=[];
+    let line='';
+    words.forEach(word=>{
+      const candidate=line?`${line} ${word}`:word;
+      if(line&&candidate.length>maxChars){lines.push(line);line=word}
+      else line=candidate;
+    });
+    if(line)lines.push(line);
+    return lines;
+  }
+  let lastLayoutWidth=0;
+  function buildGraph(){
+    const measured=Math.round(svg.parentElement.getBoundingClientRect().width||root.getBoundingClientRect().width||736);
+    const width=Math.max(288,measured);
+    lastLayoutWidth=width;
+    const columnCount=width>=680?3:width>=460?2:1;
+    const lanes=columnCount===3?[['A','P'],['E'],['B','L','S']]:columnCount===2?[['A','B','P'],['E','L','S']]:[['A','E','B','L','P','S']];
+    const gap=columnCount===1?12:18;
+    const laneWidth=(width-gap*(columnCount-1))/columnCount;
+    const lineHeight=14;
+    const positions=new Map();
+    const core=D.n.find(node=>node[2]==='C');
+    const coreLines=wrapLabel(core[1],Math.max(24,Math.floor((width-64)/7)));
+    const coreHeight=Math.max(44,coreLines.length*lineHeight+18);
+    const coreY=coreHeight/2+8;
+    const coreTextY=coreY-(coreLines.length-1)*lineHeight/2+4;
+    const coreLabelWidth=Math.min(width-48,Math.max(...coreLines.map(line=>line.length))*6.7+10);
+    const coreLabelHeight=coreLines.length*lineHeight+6;
+    positions.set(core[0],{x:22,y:coreY});
+    const nodeMarkup=[];
+    nodeMarkup.push(`<g id="${esc(core[0])}" class="N" data-node="${esc(core[0])}"><circle cx="22" cy="${coreY}" r="13" fill="var(${CV.C})"/><rect class="node-label-bg" x="40" y="${coreTextY-12}" width="${coreLabelWidth}" height="${coreLabelHeight}" rx="3"/><text x="44" y="${coreTextY}">${coreLines.map((line,index)=>`<tspan x="44" dy="${index?lineHeight:0}">${esc(line)}</tspan>`).join('')}</text></g>`);
+    const startY=coreHeight+36;
+    let maxY=startY;
+    lanes.forEach((lane,laneIndex)=>{
+      const left=laneIndex*(laneWidth+gap);
+      let y=startY;
+      lane.forEach(category=>{
+        const categoryNodes=D.n.filter(node=>node[2]===category);
+        nodeMarkup.push(`<g aria-hidden="true"><circle cx="${left+12}" cy="${y}" r="5" fill="var(${CV[category]})"/><text class="category-label" x="${left+24}" y="${y+4}">${esc(CN[category])} · ${categoryNodes.length}</text></g>`);
+        y+=22;
+        categoryNodes.forEach(nodeData=>{
+          const maxChars=Math.max(13,Math.floor((laneWidth-42)/7));
+          const lines=wrapLabel(nodeData[1],maxChars);
+          const itemHeight=Math.max(38,lines.length*lineHeight+12);
+          const cy=y+itemHeight/2;
+          const x=left+14;
+          const textX=left+36;
+          const textY=cy-(lines.length-1)*lineHeight/2+4;
+          const labelWidth=Math.min(laneWidth-36,Math.max(...lines.map(line=>line.length))*6.7+10);
+          const labelHeight=lines.length*lineHeight+6;
+          positions.set(nodeData[0],{x,y:cy});
+          nodeMarkup.push(`<g id="${esc(nodeData[0])}" class="N" data-node="${esc(nodeData[0])}"><circle cx="${x}" cy="${cy}" r="12" fill="var(${CV[category]})"/><rect class="node-label-bg" x="${textX-4}" y="${textY-12}" width="${labelWidth}" height="${labelHeight}" rx="3"/><text x="${textX}" y="${textY}">${lines.map((line,index)=>`<tspan x="${textX}" dy="${index?lineHeight:0}">${esc(line)}</tspan>`).join('')}</text></g>`);
+          y+=itemHeight;
+        });
+        y+=16;
+      });
+      maxY=Math.max(maxY,y);
+    });
+    const edgeMarkup=D.e.map(edgeData=>{
+      const source=positions.get(edgeData[1]);
+      const target=positions.get(edgeData[3]);
+      const dx=target.x-source.x;
+      const dy=target.y-source.y;
+      const length=Math.hypot(dx,dy)||1;
+      const x1=source.x+dx/length*14;
+      const y1=source.y+dy/length*14;
+      const x2=target.x-dx/length*16;
+      const y2=target.y-dy/length*16;
+      const description=`${N[edgeData[1]].label} ${edgeData[2]} ${N[edgeData[3]].label}`;
+      return `<line id="${esc(edgeData[0])}" class="E" data-edge="${esc(edgeData[0])}" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" marker-end="url(#ocf-arrow)"><title>${esc(description)}</title></line>`;
+    }).join('');
+    const height=Math.ceil(maxY+12);
+    svg.innerHTML=`<title>Offshore carnivorous finfish aquaculture dependency map</title><desc>Fifty-eight concepts and 101 evidence-supported directional relationships. Select a concept or dependency to inspect sources.</desc><defs><marker id="ocf-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="var(--muted-foreground)"/></marker></defs>${edgeMarkup}${nodeMarkup.join('')}`;
+    baseView={x:0,y:0,w:width,h:height};
+    view={...baseView};
+    svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+  }
   let sn='',se='';
   [...new Set(D.n.map(x=>x[2]))].sort().forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=CN[k];c.appendChild(o)});
   [...new Set(D.e.map(x=>x[4]))].sort().forEach(k=>{const o=document.createElement('option');o.value=o.textContent=k;t.appendChild(o)});
-  leg.innerHTML=Object.keys(CN).map(k=>`<span class="viz-badge" style="background:var(${CV[k]})">${CN[k]}</span>`).join('');
+  leg.innerHTML=Object.keys(CN).map(k=>`<span class="legend-item"><span class="legend-swatch" style="background:var(${CV[k]})" aria-hidden="true"></span>${esc(CN[k])}</span>`).join('');
 
   function filtered(){
     const z=q.value.toLowerCase(),cc=c.value,tt=t.value;
@@ -80,35 +1038,86 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   function render(){
     const f=filtered(),vis=new Set(f.ns.map(n=>n[0])),edgeIds=new Set(f.es.map(e=>e[0]));
-    document.querySelectorAll('.N').forEach(x=>x.classList.toggle('off',!vis.has(x.dataset.node)));
-    document.querySelectorAll('.E').forEach(x=>{x.style.display=edgeIds.has(x.dataset.edge)?'':'none';x.classList.toggle('on',se===x.dataset.edge)});
-    document.querySelectorAll('.N').forEach(x=>x.classList.toggle('on',sn===x.dataset.node));
+    $$('.N').forEach(x=>x.classList.toggle('off',!vis.has(x.dataset.node)));
+    $$('.E').forEach(x=>{x.style.display=edgeIds.has(x.dataset.edge)?'':'none';x.classList.toggle('on',se===x.dataset.edge)});
+    $$('.N').forEach(x=>x.classList.toggle('on',sn===x.dataset.node));
     st.textContent=`${f.ns.length} concepts and ${f.es.length} dependencies visible`; list(f.es);
   }
-  function src(a){return a.map(x=>`<div class="source"><strong>${S[x]||x}</strong><small>Source ${x}</small></div>`).join('')}
+  function src(a){
+    return a.map(x=>{
+      const s=S[x]||{title:x,locator:'Page not specified',location:''};
+      const title=esc(s.title);
+      const isWeb=/^https?:\/\//i.test(s.location);
+      const heading=isWeb?`<strong><a href="${esc(s.location)}" target="_blank" rel="noopener noreferrer">${title}</a></strong>`:`<strong>${title}</strong>`;
+      const location=s.location&&!isWeb?`<small>${esc(s.location)}</small>`:'';
+      return `<div class="source">${heading}<small>${esc(s.locator)}</small>${location}<small>Source ${esc(x)}</small></div>`;
+    }).join('');
+  }
   function node(id){
     sn=sn===id?'':id;se='';
     if(!sn)d.innerHTML='<h2>Explore the graph</h2><p class="help">Search or click a concept.</p>';
-    else{const es=D.e.filter(e=>e[1]===id||e[3]===id),ss=[...new Set(es.flatMap(e=>e[5]))];d.innerHTML=`<h2>${N[id].label}</h2><span class="viz-badge" style="margin-top:8px;background:var(${CV[N[id].cat]})">${CN[N[id].cat]}</span><p>${es.length} direct dependencies supported by ${ss.length} source records.</p>${src(ss)}`}
+    else{
+      const es=D.e.filter(e=>e[1]===id||e[3]===id);
+      const blocks=es.map(e=>{
+        const outgoing=e[1]===id;
+        const other=outgoing?N[e[3]].label:N[e[1]].label;
+        const arrow=outgoing?`${N[id].label} → ${other}`:`${other} → ${N[id].label}`;
+        return `<div class="dependency-detail"><strong>${esc(arrow)}</strong><div><span class="viz-badge">${esc(e[2])}</span></div>${src(e[5])}</div>`;
+      }).join('');
+      d.innerHTML=`<h2>${esc(N[id].label)}</h2><span class="legend-item" style="margin-top:8px"><span class="legend-swatch" style="background:var(${CV[N[id].cat]})" aria-hidden="true"></span>${esc(CN[N[id].cat])}</span><p>${es.length} direct dependencies. Each dependency below lists its supporting source records and page or section locators.</p>${blocks}`;
+    }
     render();
   }
   function edge(id){
     se=id;sn='';const e=D.e.find(x=>x[0]===id);
-    d.innerHTML=`<h2>Dependency ${e[0]}</h2><div style="margin-top:12px"><div class="viz-node">${N[e[1]].label}</div><div style="text-align:center;margin:9px 0"><span class="viz-edge-label">${e[2]}</span></div><div class="viz-node">${N[e[3]].label}</div></div><h3 style="margin-top:14px">Supporting sources</h3>${src(e[5])}`;
+    d.innerHTML=`<h2>Dependency ${esc(e[0])}</h2><div style="margin-top:12px"><div class="viz-node">${esc(N[e[1]].label)}</div><div style="text-align:center;margin:9px 0"><span class="viz-badge">${esc(e[2])}</span></div><div class="viz-node">${esc(N[e[3]].label)}</div></div><h3 style="margin-top:14px">Supporting sources</h3>${src(e[5])}`;
     render();
   }
   function list(es){
-    lst.innerHTML=es.slice(0,10).map(e=>`<button type="button" class="edge-btn" data-i="${e[0]}"><strong>${N[e[1]].label}</strong><span>${e[2]} → ${N[e[3]].label}</span></button>`).join('')+(es.length>10?`<p class="help">Showing 10 of ${es.length}. Narrow the filters to see more.</p>`:'');
+    lst.innerHTML=es.slice(0,10).map(e=>`<button type="button" class="btn edge-btn" data-i="${esc(e[0])}"><strong>${esc(N[e[1]].label)}</strong><span>${esc(e[2])} → ${esc(N[e[3]].label)}</span></button>`).join('')+(es.length>10?`<p class="help">Showing 10 of ${es.length}. Narrow the filters to see more.</p>`:'');
     lst.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>edge(b.dataset.i)));
   }
-  document.querySelectorAll('.N').forEach(x=>x.addEventListener('click',()=>node(x.dataset.node)));
-  document.querySelectorAll('.E').forEach(x=>x.addEventListener('click',()=>edge(x.dataset.edge)));
+  buildGraph();
+  svg.addEventListener('click',event=>{
+    const nodeTarget=event.target.closest('.N');
+    if(nodeTarget){node(nodeTarget.dataset.node);return}
+    const edgeTarget=event.target.closest('.E');
+    if(edgeTarget)edge(edgeTarget.dataset.edge);
+  });
   [q,c,t].forEach(x=>x.addEventListener(x===q?'input':'change',()=>{sn='';se='';render()}));
-  document.getElementById('r').addEventListener('click',()=>{q.value='';c.value='';t.value='';sn='';se='';d.innerHTML='<h2>Explore the graph</h2><p class="help">Search or click a concept.</p>';render()});
-  fs.addEventListener('click',async()=>{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()});
-  document.addEventListener('fullscreenchange',()=>fs.textContent=document.fullscreenElement?'Exit full screen':'Full screen');
+  $('#r').addEventListener('click',()=>{q.value='';c.value='';t.value='';sn='';se='';d.innerHTML='<h2>Explore the graph</h2><p class="help">Search or click a concept.</p>';render()});
+  zin.addEventListener('click',()=>zoomBy(0.8));
+  zout.addEventListener('click',()=>zoomBy(1.25));
+  zfit.addEventListener('click',fitMap);
+  svg.addEventListener('wheel',e=>{
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 0.9 : 1.1);
+  },{passive:false});
+  let drag=null;
+  svg.addEventListener('pointerdown',event=>{
+    if(event.target.closest('.N,.E'))return;
+    drag={x:event.clientX,y:event.clientY,view:{...view},pointerId:event.pointerId};
+    svg.setPointerCapture(event.pointerId);
+  });
+  svg.addEventListener('pointermove',event=>{
+    if(!drag||event.pointerId!==drag.pointerId)return;
+    const box=svg.getBoundingClientRect();
+    view.x=drag.view.x-(event.clientX-drag.x)*drag.view.w/box.width;
+    view.y=drag.view.y-(event.clientY-drag.y)*drag.view.h/box.height;
+    applyView();
+  });
+  const stopDrag=event=>{if(drag&&event.pointerId===drag.pointerId)drag=null};
+  svg.addEventListener('pointerup',stopDrag);
+  svg.addEventListener('pointercancel',stopDrag);
+  if('ResizeObserver' in window)new ResizeObserver(()=>{
+    const measured=Math.max(288,Math.round(svg.parentElement.getBoundingClientRect().width||0));
+    if(Math.abs(measured-lastLayoutWidth)>1){buildGraph();render()}
+  }).observe(svg.parentElement);
+  applyView();
   render();
-});
+})();
 </script>
+</div>
+
 </body>
 </html>
